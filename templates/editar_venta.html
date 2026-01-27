@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Venta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+    <header>
+        <h1>✏️ Editar Venta</h1>
+        <div style="margin-top:10px;">
+            <a href="{{ url_for('ventas_view') }}" class="btn-inicio">⬅️ Volver a Ventas</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="form-editar">
+            <form method="POST">
+                <label for="cliente">Cliente:</label>
+                <select name="cliente" required>
+                    {% for cliente in clientes %}
+                    <option value="{{ cliente[0] }}" {% if cliente[1] == detalle[2] %}selected{% endif %}>
+                        {{ cliente[1] }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <label for="producto">Producto:</label>
+                <select name="producto" required>
+                    {% for producto in productos %}
+                    <option value="{{ producto[0] }}" {% if producto[1] == detalle[3] %}selected{% endif %}>
+                        {{ producto[1] }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" name="cantidad" min="1" value="{{ detalle[4] }}" required>
+
+                <button type="submit">💾 Guardar cambios</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

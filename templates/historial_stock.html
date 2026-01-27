@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Stock</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>📜 Historial de Ingresos de Stock</h1>
+        <a href="{{ url_for('inventario_view') }}" class="btn-inicio">⬅️ Volver al Inventario</a>
+    </header>
+
+    <main>
+        <!-- Formulario de filtros -->
+        <form method="POST" class="form-filtros">
+            <label for="fecha_inicio">Desde:</label>
+            <input type="date" name="fecha_inicio" required>
+            
+            <label for="fecha_fin">Hasta:</label>
+            <input type="date" name="fecha_fin" required>
+            
+            <button type="submit" class="btn btn-filtrar">🔍 Filtrar</button>
+        </form>
+
+        <!-- Tabla de historial -->
+        <table class="table tabla-historial">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ingreso in historial %}
+                <tr>
+                    <td>{{ ingreso[0] }}</td>
+                    <td>{{ ingreso[1] }}</td>
+                    <td>{{ ingreso[2] }}</td>
+                    <td>{{ ingreso[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Gráfico de evolución total -->
+        <h2>📊 Evolución Total de Ingresos</h2>
+        <canvas id="graficoEvolucionTotal"></canvas>
+
+        <!-- Gráfico de evolución agrupado por producto -->
+        <h2>📊 Evolución de Ingresos por Producto</h2>
+        <canvas id="graficoEvolucionProductos"></canvas>
+    </main>
+
+    <script>
+        // Datos desde Flask
+        const fechas = {{ historial|map(attribute=3)|list|tojson }};
+        const cantidades = {{ historial|map(attribute=2)|list|tojson }};
+        const productos = {{ historial|map(attribute=1)|list|tojson }};
+
+        // =========================
+        // Gráfico 1: Evolución total
+        // =========================
+        new Chart(document.getElementById('graficoEvolucionTotal'), {
+            type: 'line',
+            data: {
+                labels: fechas,
+                datasets: [{
+                    label: 'Cantidad ingresada (total)',
+                    data: cantidades,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let producto = productos[context.dataIndex];
+                                let cantidad = context.raw;
+                                return producto + ": " + cantidad + " unidades";
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Fecha' } },
+                    y: { title: { display: true, text: 'Cantidad ingresada' }, beginAtZero: true }
+                }
+            }
+        });
+
+        // =========================
+        // Gráfico 2: Evolución por producto
+        // =========================
+        const datosAgrupados = {};
+        for (let i = 0; i < productos.length; i++) {
+            const prod = productos[i];
+            if (!datosAgrupados[prod]) {
+                datosAgrupados[prod] = { fechas: [], cantidades: [] };
+            }
+            datosAgrupados[prod].fechas.push(fechas[i]);
+            datosAgrupados[prod].cantidades.push(cantidades[i]);
+        }
+
+        const colores = [
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+        ];
+
+        const datasets = Object.keys(datosAgrupados).map((prod, idx) => ({
+            label: prod,
+            data: datosAgrupados[prod].cantidades,
+            borderColor: colores[idx % colores.length],
+            backgroundColor: colores[idx % colores.length],
+            fill: false,
+            tension: 0.3
+        }));
+
+        new Chart(document.getElementById('graficoEvolucionProductos'), {
+            type: 'line',
+            data: {
+                labels: fechas,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Fecha' } },
+                    y: { title: { display: true, text: 'Cantidad ingresada' }, beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
