@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingresar Stock</title>
+</head>
+<body>
+    <h1>➕ Ingresar Stock a {{ producto[1] }}</h1>
+    <form method="POST">
+        <label>Cantidad a ingresar:</label>
+        <input type="number" name="cantidad" required>
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="{{ url_for('inventario_view') }}">⬅️ Volver al Inventario</a>
+</body>
+</html>

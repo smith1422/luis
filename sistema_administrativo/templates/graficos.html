@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Gráficos</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+    <header>
+        <h1>📊 Panel de Gráficos</h1>
+        <h2 style="text-align:center;">Dinero actual en caja: ${{ "%.2f"|format(dinero_actual) }}</h2>
+        <div style="margin-top:10px;">
+            <a href="{{ url_for('inicio') }}" class="btn-inicio">🏠 Volver al Inicio</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Gráfico de ventas por cliente -->
+        <section>
+            <h2>👥 Ventas por Cliente</h2>
+            <canvas id="ventasClientes"></canvas>
+        </section>
+
+        <!-- Gráfico de ventas por producto -->
+        <section>
+            <h2>📦 Ventas por Producto</h2>
+            <canvas id="ventasProductos"></canvas>
+        </section>
+
+        <!-- Gráfico de compras -->
+        <section>
+            <h2>🛒 Compras Registradas</h2>
+            <canvas id="compras"></canvas>
+        </section>
+    </main>
+
+    <script>
+        // Ventas por cliente
+        const clientes = {{ datos_clientes|map(attribute=0)|list|tojson }};
+        const subtotalesClientes = {{ datos_clientes|map(attribute=1)|list|tojson }};
+
+        new Chart(document.getElementById('ventasClientes'), {
+            type: 'bar',
+            data: {
+                labels: clientes,
+                datasets: [{
+                    label: 'Ventas por cliente',
+                    data: subtotalesClientes,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                }]
+            }
+        });
+
+        // Ventas por producto
+        const productos = {{ datos_productos|map(attribute=0)|list|tojson }};
+        const subtotalesProductos = {{ datos_productos|map(attribute=1)|list|tojson }};
+
+        new Chart(document.getElementById('ventasProductos'), {
+            type: 'bar',
+            data: {
+                labels: productos,
+                datasets: [{
+                    label: 'Ventas por producto',
+                    data: subtotalesProductos,
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                }]
+            }
+        });
+
+        // Compras registradas
+        const comprasDetalles = {{ datos_compras|map(attribute=0)|list|tojson }};
+        const comprasValores = {{ datos_compras|map(attribute=1)|list|tojson }};
+
+        new Chart(document.getElementById('compras'), {
+            type: 'line',
+            data: {
+                labels: comprasDetalles,
+                datasets: [{
+                    label: 'Compras registradas',
+                    data: comprasValores,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                    fill: true
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ventas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <!-- Botón para volver al inicio -->
+    <div style="text-align:center; margin-top:10px;">
+        <a href="{{ url_for('inicio') }}" class="btn-inicio">🏠 Volver al Inicio</a>
+    </div>
+        <h1>💰 Registro de Ventas</h1>
+        <!-- Dinero actual -->
+        <h2 style="text-align:center;">Dinero actual: ${{ "%.2f"|format(dinero_actual) }}</h2>
+    </header>
+
+    <main>
+        <!-- Formulario para nueva venta -->
+        <section class="form-ventas">
+            <h2>🛒 Registrar nueva venta</h2>
+            {% if error %}
+            <p style="color:red;">{{ error }}</p>
+            {% endif %}
+            <form method="POST">
+                <label for="cliente">Cliente:</label>
+                <select name="cliente" required>
+                    {% for cliente in clientes %}
+                    <option value="{{ cliente[0] }}">{{ cliente[1] }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="producto">Producto:</label>
+                <select name="producto" required>
+                    {% for producto in productos %}
+                    <option value="{{ producto[0] }}">{{ producto[1] }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" name="cantidad" min="1" required>
+
+                <button type="submit">Registrar Venta</button>
+            </form>
+        </section>
+<h2>📜 Historial de Ventas</h2>
+
+<!-- Formulario de filtros -->
+<form method="POST" class="form-filtros">
+    <label for="fecha_inicio">Desde:</label>
+    <input type="date" name="fecha_inicio" required>
+    
+    <label for="fecha_fin">Hasta:</label>
+    <input type="date" name="fecha_fin" required>
+    
+    <button type="submit" class="btn btn-filtrar">🔍 Filtrar</button>
+</form>
+
+<table class="tabla-ventas">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Subtotal</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for fila in registros %}
+        <tr>
+            <td>{{ fila[1].strftime("%Y-%m-%d %H:%M") }}</td>
+            <td>{{ fila[2] }}</td>
+            <td>{{ fila[3] }}</td>
+            <td>{{ fila[4] }}</td>
+            <td>${{ "%.2f"|format(fila[5]) }}</td>
+            <td>${{ "%.2f"|format(fila[6]) }}</td>
+            <td>
+                <a href="{{ url_for('editar_venta', id_detalle=fila[0]) }}">✏️ Editar</a>
+                <form action="{{ url_for('eliminar_venta', id_detalle=fila[0]) }}" method="POST" style="display:inline;">
+                    <button type="submit" onclick="return confirm('¿Seguro que deseas eliminar esta venta?')">🗑️ Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<table class="tabla-ventas">
+    <thead>
+    </thead>
+    <tfoot>
+        <tr>
+            <td colspan="6" style="text-align:right; font-weight:bold;">TOTAL VENTAS:</td>
+            <td>
+                ${{ "%.2f"|format(registros|map(attribute=5)|sum) }}
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+
+        <!-- Gráfico de barras -->
+        <h2>📊 Ventas por Producto</h2>
+        <canvas id="graficoVentas"></canvas>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/grafico.js') }}"></script>
+    <script>
+    const productosGrafico = {{ productos_grafico|tojson }};
+    const subtotalesGrafico = {{ subtotales|tojson }};
+    crearGraficoVentasPorProducto(productosGrafico, subtotalesGrafico);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Producto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('inicio') }}" class="btn-inicio">🏠 Volver al Inicio</a>
+        <h1>➕ Agregar Producto</h1>
+    </header>
+
+    <main>
+        <form class="form-clientes" method="POST">
+            {% if error %}
+            <p style="color: red;">{{ error }}</p>
+            {% endif %}
+
+            <label for="nombre">Nombre del producto</label>
+            <input type="text" id="nombre" name="nombre" required>
+
+            <label for="cantidad">Cantidad</label>
+            <input type="number" id="cantidad" name="cantidad" min="0" required>
+
+            <label for="precio">Precio unitario</label>
+            <input type="number" id="precio" name="precio" step="0.01" min="0" required>
+
+
+            <button type="submit">Guardar Producto</button>
+        </form>
+    </main>
+</body>
+</html>

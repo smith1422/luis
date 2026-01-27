@@ -1,0 +1,37 @@
+<header>
+    <h1>🧑‍🤝‍🧑 Lista de Clientes</h1>
+    <div style="margin-top:10px;">
+            <a href="{{ url_for('inicio') }}" class="btn-inicio">🏠 Volver al Inicio</a>
+        </div>
+    <a href="{{ url_for('nuevo_cliente') }}" class="btn btn-agregar">➕ Agregar Cliente</a>
+    
+</header>
+
+<table class="table tabla-clientes">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cliente in registros %}
+        <tr>
+            <td>{{ cliente[0] }}</td>
+            <td>{{ cliente[1] }}</td>
+            <td>{{ cliente[2] }}</td>
+            <td>{{ cliente[3] }}</td>
+            <td>
+                <a href="{{ url_for('editar_cliente', id_cliente=cliente[0]) }}" class="btn btn-editar">✏️ Editar</a>
+                <form action="{{ url_for('eliminar_cliente', id_cliente=cliente[0]) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-eliminar">🗑️ Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+

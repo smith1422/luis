@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Compra</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+    <header>
+        <h1>✏️ Editar Compra</h1>
+        <div style="margin-top:10px;">
+            <a href="{{ url_for('compras_view') }}" class="btn-inicio">⬅️ Volver a Compras</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="form-editar">
+            <form method="POST">
+                <label for="detalle">Detalle:</label>
+                <input type="text" name="detalle" value="{{ compra[2] }}" required>
+
+                <label for="valor">Valor:</label>
+                <input type="number" step="0.01" name="valor" value="{{ compra[3] }}" required>
+
+                <button type="submit">💾 Guardar cambios</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

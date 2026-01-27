@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Sistema Administrativo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+    <header>
+        <h1>🥟 Sistema Administrativo</h1>
+        <p>Bienvenido, selecciona un módulo para continuar</p>
+    </header>
+
+    <main class="dashboard">
+        <div class="card">
+            <h2>📦 Inventario</h2>
+            <p>Consulta el stock actual y las empanadas totales.</p>
+            <a href="{{ url_for('inventario_view') }}" class="btn btn-editar">Ir al Inventario</a>
+        </div>
+
+        <div class="card">
+            <h2>💰 Ventas</h2>
+            <p>Revisa las ventas registradas, clientes y subtotales.</p>
+            <a href="{{ url_for('ventas_view') }}" class="btn btn-editar">Ir a Ventas</a>
+        </div>
+
+        <div class="card">
+            <h2>🛒 Compras</h2>
+            <p>Consulta las compras registradas.</p>
+            <a href="{{ url_for('compras_view') }}" class="btn btn-editar">Ir a Compras</a>
+        </div>
+
+        <div class="card">
+            <h2>🧑‍🤝‍🧑 Clientes</h2>
+            <p>Consulta la lista de clientes registrados.</p>
+            <a href="{{ url_for('clientes_listado') }}" class="btn btn-editar">Ir a Clientes</a>
+        </div>
+
+        <div class="card">
+            <h2>📊 Gráficos</h2>
+            <p>Consulta los gráficos de ventas y compras.</p>
+            <a href="{{ url_for('graficos_view') }}" class="btn btn-editar">Ir a Gráficos</a>
+        </div>
+
+        <div class="card">
+            <h2>🛠 Test DB</h2>
+            <p>Verifica la conexión con la base de datos.</p>
+            <a href="{{ url_for('test_db') }}" class="btn btn-editar">Probar conexión</a>
+        </div>
+    </main>
+</body>
+</html>

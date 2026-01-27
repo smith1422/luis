@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+    <header>
+        <h1>📦 Inventario de Productos</h1>
+        <a href="{{ url_for('inicio') }}" class="btn-inicio">🏠 Volver al Inicio</a>
+        <a href="{{ url_for('nuevo_producto') }}" class="btn btn-agregar">➕ Agregar Producto</a>
+        <a href="{{ url_for('historial_stock_view') }}" class="btn btn-historial">📜 Historial de Stock</a>
+    </header>
+
+    <main>
+        <!-- Tabla de inventario -->
+        <table class="table tabla-inventario">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Stock Actual</th>
+                    <th>Precio Unitario</th>
+                    <th>Empanadas Totales</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr class="{% if producto[2] < 5 %}stock-bajo{% endif %}">
+                    <td>{{ producto[0] }}</td> <!-- ID -->
+                    <td>{{ producto[1] }}</td> <!-- Nombre -->
+                    <td>{{ producto[2] }}</td> <!-- Stock -->
+                    <td>${{ producto[3] }}</td> <!-- Precio -->
+                    <td>{{ producto[4] }}</td> <!-- Totales -->
+                    <td>
+                        <a href="{{ url_for('editar_producto', id_producto=producto[0]) }}" class="btn btn-editar">✏️ Editar</a>
+                        <form action="{{ url_for('eliminar_producto', id_producto=producto[0]) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-eliminar">🗑️ Eliminar</button>
+                        </form>
+                        <!-- Nuevo botón para ingresar stock -->
+                        <a href="{{ url_for('ingresar_stock_view', id_producto=producto[0]) }}" class="btn btn-stock">➕ Ingresar Stock</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
