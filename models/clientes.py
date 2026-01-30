@@ -29,15 +29,18 @@ def actualizar_cliente(id_cliente, nombre, correo, telefono):
     conn.close()
 
 def eliminar_cliente(id_cliente):
-    try:
-        conn = psycopg2.connect(**db_params)
-        cur = conn.cursor()
-        cur.execute("DELETE FROM clientes WHERE id_cliente=%s;", (id_cliente,))
-        conn.commit()
-        cur.close()
-        conn.close()
-    except Exception as e:
-        return {"error": str(e)}
+    conn = psycopg2.connect(**db_params)
+    cur = conn.cursor()
+    cur.execute("SELECT COUNT(*) FROM ventas WHERE id_cliente=%s;", (id_cliente,))
+    count = cur.fetchone()[0]
+    if count > 0:
+        raise Exception("No se puede eliminar: cliente con ventas registradas")
+    cur.execute("DELETE FROM clientes WHERE id_cliente=%s;", (id_cliente,))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 
 import psycopg2
 from config import db_params
