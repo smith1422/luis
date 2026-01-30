@@ -193,12 +193,13 @@ def test_db():
         return {"error": str(e)}
 
 
-# Clientes
 @app.route("/clientes")
 def clientes_listado():
-    registros = clientes.get_clientes()
-    return render_template("clientes.html", registros=registros)
-
+    try:
+        registros = clientes.get_clientes()
+        return render_template("clientes.html", registros=registros)
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.route("/clientes/nuevo", methods=["GET", "POST"])
 def nuevo_cliente():
