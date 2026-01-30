@@ -220,7 +220,7 @@ def editar_cliente(id_cliente):
     return render_template("editar_cliente.html", cliente=cliente)
 
 
-@app.route("/clientes/eliminar/<int:id_cliente>")
+@app.route("/clientes/eliminar/<int:id_cliente>", methods=["POST"])
 def eliminar_cliente(id_cliente):
     try:
         clientes.eliminar_cliente(id_cliente)
@@ -228,7 +228,6 @@ def eliminar_cliente(id_cliente):
         return redirect(url_for("clientes_listado"))
     except Exception as e:
         return {"error": str(e)}
-
 
 # Compras
 @app.route("/compras", methods=["GET", "POST"])

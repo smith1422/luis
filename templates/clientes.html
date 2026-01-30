@@ -26,9 +26,10 @@
             <td>{{ cliente[3] }}</td>
             <td>
                 <a href="{{ url_for('editar_cliente', id_cliente=cliente[0]) }}" class="btn btn-editar">✏️ Editar</a>
-                <form action="{{ url_for('eliminar_cliente', id_cliente=cliente[0]) }}" method="POST" style="display:inline;">
-                    <button type="submit" class="btn btn-eliminar">🗑️ Eliminar</button>
-                </form>
+               <form action="{{ url_for('eliminar_cliente', id_cliente=cliente[0]) }}" method="post">
+    <button type="submit">Eliminar</button>
+</form>
+
             </td>
         </tr>
         {% endfor %}
