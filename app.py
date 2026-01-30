@@ -221,7 +221,7 @@ def editar_cliente(id_cliente):
 
 
 @app.route("/clientes/eliminar/<int:id_cliente>")
-def eliminar_cliente_route(id_cliente):
+def eliminar_cliente(id_cliente):
     try:
         clientes.eliminar_cliente(id_cliente)
         flash("✅ Cliente eliminado correctamente")
