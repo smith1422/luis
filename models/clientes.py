@@ -29,12 +29,15 @@ def actualizar_cliente(id_cliente, nombre, correo, telefono):
     conn.close()
 
 def eliminar_cliente(id_cliente):
-    conn = psycopg2.connect(**db_params)
-    cur = conn.cursor()
-    cur.execute("DELETE FROM clientes WHERE id_cliente=%s;", (id_cliente,))
-    conn.commit()
-    cur.close()
-    conn.close()
+    try:
+        conn = psycopg2.connect(**db_params)
+        cur = conn.cursor()
+        cur.execute("DELETE FROM clientes WHERE id_cliente=%s;", (id_cliente,))
+        conn.commit()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        return {"error": str(e)}
 
 import psycopg2
 from config import db_params
