@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from models import clientes, inventario, ventas, compras, graficos
 import psycopg2
 from config import db_params
+import os
 
 app = Flask(__name__)
 app.secret_key = "clave_secreta_segura"  # Necesario para usar flash()
@@ -181,11 +182,15 @@ def eliminar_venta(id_detalle):
 @app.route("/test-db")
 def test_db():
     try:
-        conn = psycopg2.connect(**db_params)
+        import os, psycopg2
+        conn = psycopg2.connect(os.environ["DATABASE_URL"])
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM clientes;")
+        count = cur.fetchone()[0]
         conn.close()
-        return "Conexión exitosa a la base de datos 🎉"
-    except Exception:
-        return "Error de conexión: no se pudo establecer comunicación con la base de datos."
+        return {"clientes_registrados": count}
+    except Exception as e:
+        return {"error": str(e)}
 
 
 # Clientes
